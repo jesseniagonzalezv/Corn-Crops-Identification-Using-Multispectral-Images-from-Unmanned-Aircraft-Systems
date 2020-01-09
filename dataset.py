@@ -57,6 +57,6 @@ def load_image(path):
 def load_mask(path):   
 
     mask = np.load(str(path).replace('images', 'masks').replace(r'.npy', r'_a.npy'), 0)
-    mask=mask.transpose(1, 2, 0).reshape(mask.shape[1],-1)
+    mask=mask.transpose(1, 2, 0) #.reshape(mask.shape[1],-1)
     mask=(mask > 0).astype(np.uint8)
     return mask

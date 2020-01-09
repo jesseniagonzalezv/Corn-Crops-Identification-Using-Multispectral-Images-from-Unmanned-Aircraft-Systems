@@ -58,17 +58,18 @@ def main():
     root = Path(args.root)
     root.mkdir(exist_ok=True, parents=True)
 
-    num_classes = 1 
+    num_classes = 3
+    num_input_channels=6
     if args.model == 'UNet11':
-        model = UNet11(num_classes=num_classes)
+        model = UNet11(num_classes=num_classe,num_input_channels=num_input_channelss)
     elif args.model == 'UNet':
-        model = UNet(num_classes=num_classes)
+        model = UNet(num_classes=num_classes,input_channels=num_input_channels)
     elif args.model == 'AlbuNet34':
-        model = AlbuNet34(num_classes=num_classes, num_input_channels=4, pretrained=False)
+        model = AlbuNet34(num_classes=num_classes, num_input_channels=num_input_channels, pretrained=False)
     elif args.model == 'SegNet':
-        model = SegNet(num_classes=num_classes, num_input_channels=4, pretrained=False)
+        model = SegNet(num_classes=num_classes, num_input_channels=num_input_channels, pretrained=False)
     else:
-        model = UNet11(num_classes=num_classes, input_channels=4)
+        model = UNet11(num_classes=num_classes, input_channels=num_input_channels)
 
     
     if torch.cuda.is_available():

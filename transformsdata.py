@@ -97,14 +97,14 @@ class ImageOnly:
 
     
 class Normalize:  #HR PeruSat
-    def __init__(self, mean=(0.11383374, 0.10310764, 0.11405758, 0.13963067), std=(0.08972336, 0.06713878, 0.05742005, 0.11076992)):
+    def __init__(self, mean=(0.11383374, 0.10310764, 0.11405758, 0.13963067,0.13963067,0.13963067), std=(0.08972336, 0.06713878, 0.05742005, 0.11076992,0.13963067,0.13963067)):
         #mean=(0.11239524, 0.101936, 0.11311523, 0.13813571), std=(0.08964322, 0.06702993, 0.05725554, 0.11082901)
         self.mean = mean
         self.std = std
 
     def __call__(self, img):
         img= img.astype(np.float32)
-        max_pixel_value=3521 #3413
+        max_pixel_value=255 #3521 
         img = img/max_pixel_value 
         img -= np.ones(img.shape) * self.mean
         img /= np.ones(img.shape) * self.std

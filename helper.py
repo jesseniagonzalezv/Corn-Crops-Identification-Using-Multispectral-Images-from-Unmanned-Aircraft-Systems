@@ -73,7 +73,7 @@ def plot_side_by_side(img_arrays,filedata,out_file, name_output,save=0):
 
 def masks_to_colorimg(masks):
 
-    colors = np.asarray([(0, 140, 150)])
+    colors = np.asarray([(201, 58, 64), (242, 207, 1), (0, 152, 75)])
     colorimg = np.zeros((masks.shape[1], masks.shape[2], 3), dtype=np.uint8) * 255
     channels, height, width = masks.shape
 
@@ -91,7 +91,7 @@ def reverse_transform(inp):
     mean = np.array([0.11239524, 0.101936, 0.11311523])
     std = np.array([0.08964322, 0.06702993, 0.05725554]) 
     inp = std * inp + mean
-    inp = np.clip(inp, 0, 1)*3521 #3415
+    inp = np.clip(inp, 0, 1)*255 #*3521 
     #inp = (inp/inp.max()).astype(np.float32)
     inp = (inp/inp.max())#.astype(np.float32)
     inp = (inp*255).astype(np.uint8)
