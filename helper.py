@@ -91,7 +91,7 @@ def reverse_transform(inp):
     mean = np.array([0.11239524, 0.101936, 0.11311523])
     std = np.array([0.08964322, 0.06702993, 0.05725554]) 
     inp = std * inp + mean
-    inp = np.clip(inp, 0, 1)*255 #*3521 
+    inp = np.clip(inp, 0, 1)*65535 #*3521 
     #inp = (inp/inp.max()).astype(np.float32)
     inp = (inp/inp.max())#.astype(np.float32)
     inp = (inp*255).astype(np.uint8)

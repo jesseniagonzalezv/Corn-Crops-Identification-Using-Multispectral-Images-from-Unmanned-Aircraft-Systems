@@ -104,7 +104,7 @@ class Normalize:  #HR PeruSat
 
     def __call__(self, img):
         img= img.astype(np.float32)
-        max_pixel_value=255 #3521 
+        max_pixel_value=65535 #3521 
         img = img/max_pixel_value 
         img -= np.ones(img.shape) * self.mean
         img /= np.ones(img.shape) * self.std

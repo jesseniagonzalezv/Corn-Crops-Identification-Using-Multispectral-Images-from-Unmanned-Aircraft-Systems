@@ -44,19 +44,19 @@ class WaterDataset(Dataset):
             return to_float_tensor(img), str(img_file_name) 
 
 
-def to_float_tensor(img):
+def to_float_tensor(img): #CH,H,W
     img=torch.from_numpy(np.moveaxis(img, -1, 0)).float()  
     return img
 
 
-def load_image(path):
+def load_image(path): # H,W,CH
     img = np.load(str(path))
-    img=img.transpose((1, 2, 0)) 
+    img=img #.transpose((1, 2, 0)) 
     return  img 
 
-def load_mask(path):   
+def load_mask(path):   #H,W,CH
 
-    mask = np.load(str(path).replace('images', 'masks').replace(r'.npy', r'_a.npy'), 0)
-    mask=mask.transpose(1, 2, 0) #.reshape(mask.shape[1],-1)
+    mask = np.load(str(path).replace('images', 'masks'),0) #replace(r'.npy', r'_a.npy'), 0)
+    #mask=mask.transpose(1, 2, 0) #.reshape(mask.shape[1],-1)
     mask=(mask > 0).astype(np.uint8)
     return mask

@@ -31,7 +31,7 @@ def find_max(im_pths):
     for i in im_pths:
         img = np.load(str(i))
         #print(np.max(img))
-        img=img.transpose((2, 1, 0))
+        img=img #.transpose((2, 1, 0))
         #print(np.shape(img))
         minimo_pixel.append(np.min(img))
         maximo_pixel.append(np.max(img))
@@ -41,7 +41,7 @@ def find_max(im_pths):
         
 
     
-CHANNEL_NUM = 4
+CHANNEL_NUM = 5
 
 
 def cal_dir_stat(im_pths, maximunValue): ##give the names 
@@ -56,7 +56,7 @@ def cal_dir_stat(im_pths, maximunValue): ##give the names
 
 
     for path in im_pths:
-        im = np.load(path).transpose(1,2,0) # 
+        im = np.load(path) #.transpose(1,2,0) # 
         #print(np.shape(im))
 
         im = im/maximunValue

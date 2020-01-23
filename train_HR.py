@@ -61,7 +61,7 @@ def main():
     num_classes = 3
     num_input_channels=6
     if args.model == 'UNet11':
-        model = UNet11(num_classes=num_classe,num_input_channels=num_input_channelss)
+        model = UNet11(num_classes=num_classes,num_input_channels=num_input_channels)
     elif args.model == 'UNet':
         model = UNet(num_classes=num_classes,input_channels=num_input_channels)
     elif args.model == 'AlbuNet34':
@@ -97,7 +97,6 @@ def main():
     #name_file='_HR_dist'
     #name_file='_dist_60'
     #name_file='_dist_60_2'
-    #name_file='_HR_60_fake'
     #name_file='_HR_116_fake'
 
         
@@ -112,8 +111,8 @@ def main():
     #train_val_file_names, test_file_names = get_split_out(data_path,data_all,args.fold_out)
     #################################################################################  
 
-    train_val_file_names=np.array(sorted(glob.glob(str(data_path/'data_850'/'images')+ "/*.npy")))
-    test_file_names =  np.array(sorted(glob.glob(str(data_path/'test_850'/'images') + "/*.npy")))
+    train_val_file_names=np.array(sorted(glob.glob(str(data_path/'train_val'/'images')+ "/*.npy")))
+    test_file_names =  np.array(sorted(glob.glob(str(data_path/'test'/'images') + "/*.npy")))
     if args.percent !=1:
         extra, train_val_file_names= percent_split(train_val_file_names, args.percent) 
 

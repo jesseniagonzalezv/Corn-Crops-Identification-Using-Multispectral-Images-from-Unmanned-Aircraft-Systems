@@ -318,35 +318,35 @@ def find_metrics(train_file_names,val_file_names, test_file_names, max_values, m
 #find_metrics(train_file_names,val_file_names,max_values, mean_values, std_values, name_model='UNet11', out_file='HR',dataset_file='HR' ,name_file='_dist_60' )
 
 
-train_file_names = np.load("logs_HR/mapping/train_files_80_percent_UNet11_fold0_4.npy")
-val_file_names = np.load("logs_HR/mapping/val_files_80_percent_UNet11_fold0_4.npy")
+#train_file_names = np.load("logs_HR/mapping/train_files_80_percent_UNet11_fold0_4.npy")
+#val_file_names = np.load("logs_HR/mapping/val_files_80_percent_UNet11_fold0_4.npy")
 
 ######################## setting all data paths#######
-outfile_path = 'HR/testout_conida'
-data_path = 'data_HR'
-#test_path= "data_HR/unlabel/images_jungle"  #crear otro test
-test_path= "data_HR/test_conida/images"  #crear otro test
+#outfile_path = 'HR/testout_conida'
+#data_path = 'data_HR'
+##test_path= "data_HR/unlabel/images_jungle"  #crear otro test
+#test_path= "data_HR/test_conida/images"  #crear otro test#
 
-get_files_path = test_path + "/*.npy"
-test_file_names = np.array(sorted(glob.glob(get_files_path)))
+#get_files_path = test_path + "/*.npy"
+#test_file_names = np.array(sorted(glob.glob(get_files_path)))
 ###################################
 
-max_values= 3521
-mean_values=(0.11381838, 0.10376265, 0.11490792, 0.13968428)
-std_values=(0.09109049, 0.06857457, 0.05874884, 0.111346247)
+#max_values= 3521
+#mean_values=(0.11381838, 0.10376265, 0.11490792, 0.13968428)
+#std_values=(0.09109049, 0.06857457, 0.05874884, 0.111346247)
 
-PATH = 'logs_HR/mapping/model_40epoch_80_percent_UNet11_fold0.pth'
+#PATH = 'logs_HR/mapping/model_40epoch_80_percent_UNet11_fold0.pth'
 
 #Initialise the model
-num_classes = 1 
-model = UNet11(num_classes=num_classes)
-model.cuda()
-model.load_state_dict(torch.load(PATH))
-model.eval()   # Set model to evaluate mode
+#num_classes = 1 
+#model = UNet11(num_classes=num_classes)
+#model.cuda()
+#model.load_state_dict(torch.load(PATH))
+#model.eval()   # Set model to evaluate mode
         
         
-find_metrics(train_file_names,val_file_names, test_file_names, max_values, mean_values, std_values,fold_out=0, fold_in=4,model=model,  name_model='UNet11', out_file=outfile_path,dataset_file='HR' ,name_file='_test_conida' )
-from plotting import plot_prediction
-plot_prediction(stage='test',name_file='_test_conida',out_file=outfile_path,name_model='UNet11',fold_out=0,fold_in=4, count=90)
+#find_metrics(train_file_names,val_file_names, test_file_names, max_values, mean_values, std_values,fold_out=0, fold_in=4,model=model,  name_model='UNet11', out_file=outfile_path,dataset_file='HR' ,name_file='_test_conida' )
+#from plotting import plot_prediction
+#plot_prediction(stage='test',name_file='_test_conida',out_file=outfile_path,name_model='UNet11',fold_out=0,fold_in=4, count=90)
 
 #########################end############################
