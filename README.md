@@ -28,3 +28,4 @@ Dataset --- HR
         1. python trainHR.sh
         2. python plotting.sh  (need path roots)
 
+Modificacion en terminal
