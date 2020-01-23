@@ -36,7 +36,7 @@ class WaterDataset(Dataset):
 
             img, mask = self.transform(img, mask)
 
-            return to_float_tensor(img), torch.from_numpy(np.expand_dims(mask, 0)).float()
+            return to_float_tensor(img),to_float_tensor(mask) # torch.from_numpy(np.expand_dims(mask, 0)).float()
         else:
             mask = np.zeros(img.shape[:2])
             img, mask = self.transform(img, mask)

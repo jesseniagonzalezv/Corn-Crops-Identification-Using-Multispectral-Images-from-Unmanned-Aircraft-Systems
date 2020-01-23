@@ -88,8 +88,8 @@ def masks_to_colorimg(masks):
 
 def reverse_transform(inp):     
     inp = inp.transpose(1,2,0)
-    mean = np.array([0.29420792 0.35045641 0.29821775 0.47590817 0.42476267])
-    std = np.array([0.23638895 0.22478364 0.24044051 0.22133588 0.21793175]) 
+    mean = np.array([0.29420792, 0.35045641, 0.29821775])
+    std = np.array([0.23638895, 0.22478364, 0.24044051]) 
     inp = std * inp + mean
     inp = np.clip(inp, 0, 1)*65535 #*3521 
     #inp = (inp/inp.max()).astype(np.float32)
