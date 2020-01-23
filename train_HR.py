@@ -59,7 +59,7 @@ def main():
     root.mkdir(exist_ok=True, parents=True)
 
     num_classes = 3
-    num_input_channels=6
+    num_input_channels=5
     if args.model == 'UNet11':
         model = UNet11(num_classes=num_classes,num_input_channels=num_input_channels)
     elif args.model == 'UNet':
@@ -71,6 +71,7 @@ def main():
     else:
         model = UNet11(num_classes=num_classes, input_channels=num_input_channels)
 
+        
     
     if torch.cuda.is_available():
         if args.device_ids:#
@@ -209,7 +210,7 @@ def main():
     torch.save(model.module.state_dict(),(str(out_path)+'/model_40epoch{}_{}_fold{}.pth').format(name_file,args.model,args.fold_out)) #I am saving the last model of k_fold
     
     print(args.model)
-    max_values_all_data=3521
+    max_values_all_data=65535
     
 
     find_metrics(train_file_names, val_file_names, test_file_names, max_values_all_data, mean_values, std_values, args.fold_out, args.fold_in,model, args.model, out_file='HR', dataset_file='HR',name_file=name_file)   

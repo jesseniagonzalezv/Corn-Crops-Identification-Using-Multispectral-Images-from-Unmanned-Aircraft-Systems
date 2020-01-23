@@ -96,7 +96,8 @@ def train_model(name_file, model, optimizer, scheduler,dataloaders,fold_out, nam
             f.write("dataloader:" + str(len(dataloaders[phase])) + "\n") 
             for inputs, labels in dataloaders[phase]:
                 inputs = inputs.to(device)
-                labels = labels.to(device)             
+                labels = labels.to(device) 
+                print(inputs.shape(),labels.shape())
 
                 optimizer.zero_grad()
                 # forward
@@ -104,7 +105,8 @@ def train_model(name_file, model, optimizer, scheduler,dataloaders,fold_out, nam
                 with torch.set_grad_enabled(phase == 'train'):
                     #outputs, conv1 = model(inputs)
                     outputs = model(inputs)
-                    
+                    print(outputs.shape())
+
                     # saving batch prediction _final_layer 
                     #if itr == 0:
                     #    final_layer_data = outputs.data.cpu().numpy()
