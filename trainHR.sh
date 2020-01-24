@@ -5,6 +5,6 @@
 echo hola
 
 
-python train_HR.py --model UNet11  --n-epochs 3
+python train_HR.py --model UNet11  --n-epochs 40
 
 python plotting.py --out-file 'HR' --stage 'test'  --name-model 'UNet11' --count 277

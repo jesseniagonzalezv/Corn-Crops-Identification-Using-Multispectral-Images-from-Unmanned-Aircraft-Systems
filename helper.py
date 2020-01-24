@@ -73,7 +73,7 @@ def plot_side_by_side(img_arrays,filedata,out_file, name_output,save=0):
 
 def masks_to_colorimg(masks):
 
-    colors = np.asarray([(201, 58, 64), (242, 207, 1), (0, 152, 75)])
+    colors = np.asarray([(240, 0, 0), (0, 240, 0), (0, 0, 240)])
     colorimg = np.zeros((masks.shape[1], masks.shape[2], 3), dtype=np.uint8) * 255
     channels, height, width = masks.shape
 

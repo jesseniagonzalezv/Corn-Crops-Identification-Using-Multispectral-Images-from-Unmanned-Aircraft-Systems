@@ -120,10 +120,10 @@ def main():
     arg = parser.add_argument
     arg('--out-file', type=str, default='HR', help='For example HR, paral, seq')
     arg('--stage', type=str, default='test', help='For example test or val')
-    arg('--name-file', type=str, default='_8_percent', help='For example _6_percent')
+    arg('--name-file', type=str, default='_100_percent', help='For example _6_percent')
     arg('--name-model', type=str, default='UNet11', choices=['UNet11','UNet','AlbuNet34','SegNet'])
     arg('--fold-out', type=int, help='fold train test', default=0)
-    arg('--fold-in', type=int, help='fold train val', default=4)  #save also the others foldin
+    arg('--fold-in', type=int, help='fold train val', default=0)  #save also the others foldin
     arg('--count', type=int, help='number of img to plot', default=94)    
 
     args = parser.parse_args()
