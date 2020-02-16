@@ -36,7 +36,9 @@ class WaterDataset(Dataset):
 
             img, mask = self.transform(img, mask)
 
-            return to_float_tensor(img),to_float_tensor(mask) # torch.from_numpy(np.expand_dims(mask, 0)).float()
+            return to_float_tensor(img), torch.from_numpy(np.expand_dims(mask, 0)).float()
+            ##To work con labels  return to_float_tensor(img),to_long_tensor(mask) # torch.from_numpy(np.expand_dims(mask, 0)).float()
+            
         else:
             mask = np.zeros(img.shape[:2])
             img, mask = self.transform(img, mask)
@@ -48,15 +50,21 @@ def to_float_tensor(img): #CH,H,W
     img=torch.from_numpy(np.moveaxis(img, -1, 0)).float()  
     return img
 
+def to_long_tensor(img): #CH,H,W
+    img=torch.from_numpy(np.moveaxis(img, -1, 0)).long()   #https://discuss.pytorch.org/t/multi-class-cross-entropy-loss-function-implementation-in-pytorch/19077/43
+    return img
 
 def load_image(path): # H,W,CH
     img = np.load(str(path))
-    img=img #.transpose((1, 2, 0)) 
     return  img 
+
 
 def load_mask(path):   #H,W,CH
 
     mask = np.load(str(path).replace('images', 'masks'),0) #replace(r'.npy', r'_a.npy'), 0)
-    #mask=mask.transpose(1, 2, 0) #.reshape(mask.shape[1],-1)
-    mask=(mask > 0).astype(np.uint8)
+    mask =np .max(mask, axis=2)  #convert of 3 channel to 1 channel
+    #mask=mask.transpose(1, 2, 0) #.reshape(mask.shape[1],-1) # to convert de 1,H,W to  H,W
+    mask=(mask > 0).astype(np.uint8) 
+    
+    
     return mask

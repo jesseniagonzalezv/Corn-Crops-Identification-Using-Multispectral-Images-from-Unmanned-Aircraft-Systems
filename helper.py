@@ -71,9 +71,24 @@ def plot_side_by_side(img_arrays,filedata,out_file, name_output,save=0):
     plot_img_array(np.array(flatten_list),filedata,save,out_file, name_output, ncol=len(img_arrays))
 
 
-def masks_to_colorimg(masks):
+def masks_to_colorimg_3clases(masks):
 
     colors = np.asarray([(240, 0, 0), (0, 240, 0), (0, 0, 240)])
+    colorimg = np.zeros((masks.shape[1], masks.shape[2], 3), dtype=np.uint8) * 255
+    channels, height, width = masks.shape
+
+    for y in range(height):
+        for x in range(width):
+            selected_colors = colors[masks[:,y,x] > 0.2]
+
+            if len(selected_colors) > 0:
+                colorimg[y,x,:] = np.mean(selected_colors, axis=0)
+
+    return colorimg.astype(np.uint8)
+
+def masks_to_colorimg(masks):
+
+    colors = np.asarray([(0, 140, 150)])
     colorimg = np.zeros((masks.shape[1], masks.shape[2], 3), dtype=np.uint8) * 255
     channels, height, width = masks.shape
 

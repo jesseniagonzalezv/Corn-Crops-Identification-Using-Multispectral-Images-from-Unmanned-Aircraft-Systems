@@ -103,7 +103,7 @@ def plot_prediction(stage='test',name_file='_HR_60_fake',out_file='HR',name_mode
     pred_images = np.load(pred_file)
     val_label = np.load(label_file)
     pred_images[0,0,:,:,:].shape
-    print(val_images.shape)
+    print(val_images.shape,val_label.shape,pred_images.shape)
     input_images_rgb = [helper.reverse_transform(x) for x in val_images[:95,0,:3,:,:]]   #new metrics
     # Map each channel (i.e. class) to each color
     target_masks_rgb = [helper.masks_to_colorimg(x) for x in val_label[:95,0,:3,:,:]]

@@ -4,6 +4,7 @@ import random
 import numpy as np
 import time
 import torch
+from torch import nn
 #import tqdm
 import copy      
 
@@ -11,6 +12,9 @@ from collections import defaultdict
 import torch.nn.functional as F
 from loss import dice_loss,metric_jaccard
 import os
+
+from torch.autograd import Variable
+import tqdm
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -21,8 +25,14 @@ else:
     print('CUDA is available!  Training on GPU ...')
 
 
+#def variable(x, volatile=False):
+ #   if isinstance(x, (list, tuple)):
+  #      return [variable(y, volatile=volatile) for y in x]
+  #  return cuda(Variable(x, volatile=volatile))
+
+
 #def cuda(x):
-#    return x.cuda(async=True) if torch.cuda.is_available() else x
+ #   return x.cuda(async=True) if torch.cuda.is_available() else x
 
 
 def calc_loss(pred, target, metrics, bce_weight=0.5):
@@ -30,7 +40,7 @@ def calc_loss(pred, target, metrics, bce_weight=0.5):
     pred = torch.sigmoid(pred)
     dice = dice_loss(pred, target)
     
-    pred=(pred >0.5).float()  #!!!!!!  th 0.55 
+    pred=(pred >0.5).float()  #!!
     jaccard_loss = metric_jaccard(pred, target)
     
     loss = bce * bce_weight + dice * (1 - bce_weight)
@@ -50,7 +60,7 @@ def print_metrics(metrics, epoch_samples, phase, f):
     print("{}: {}".format(phase, ", ".join(outputs)))
     f.write("{}: {}".format(phase, ", ".join(outputs)))    ### f
 
-def train_model(name_file, model, optimizer, scheduler,dataloaders,fold_out, name_model='UNet11',num_epochs=25):
+def train_model(args, name_file, model, optimizer, scheduler,dataloaders,fold_out, name_model='UNet11',num_epochs=25):
 
     ##name depend
     #name_save='_400' 
@@ -95,6 +105,7 @@ def train_model(name_file, model, optimizer, scheduler,dataloaders,fold_out, nam
             print("dataloader:",len(dataloaders[phase]) )
             f.write("dataloader:" + str(len(dataloaders[phase])) + "\n") 
             for inputs, labels in dataloaders[phase]:
+                #inputs, targets = variable(inputs), variable(labels)
                 inputs = inputs.to(device)
                 labels = labels.to(device) 
                 #print(np.shape(inputs),np.shape(labels))

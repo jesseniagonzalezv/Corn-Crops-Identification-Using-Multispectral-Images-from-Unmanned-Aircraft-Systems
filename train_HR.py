@@ -2,7 +2,6 @@
 This is the main code 
 Ask the argument
 Make the loaders
-Make the train
 '''
 import argparse
 from pathlib import Path
@@ -22,6 +21,9 @@ import torch.optim as optim
 import numpy as np 
 import glob  ###
 import os
+
+import torch.backends.cudnn as cudnn
+import torch.backends.cudnn
 
 from get_train_test_kfold import get_split_out, percent_split, get_split_in
 
@@ -50,7 +52,7 @@ def main():
     arg('--batch-size', type=int, default=4)
     arg('--limit', type=int, default=10000, help='number of images in epoch')
     arg('--n-epochs', type=int, default=40)
-    arg('--lr', type=float, default=1e-3)
+    arg('--lr', type=float, default=1e-1)
     arg('--model', type=str, default='UNet11', choices=['UNet11','UNet','AlbuNet34','SegNet'])
 
     args = parser.parse_args()
@@ -58,7 +60,9 @@ def main():
     root = Path(args.root)
     root.mkdir(exist_ok=True, parents=True)
 
-    num_classes = 3
+    #num_classes = 3
+    num_classes = 1
+
     num_input_channels=5
     if args.model == 'UNet11':
         model = UNet11(num_classes=num_classes,num_input_channels=num_input_channels)
@@ -158,7 +162,7 @@ def main():
     max_values, mean_values, std_values=meanstd(train_file_names, val_file_names,test_file_names,str(data_path)) #_60 --data_HR, data_LR
 
     train_transform = DualCompose([
-        CenterCrop(512),
+        CenterCrop(160), #
         HorizontalFlip(),
         VerticalFlip(),
         Rotate(),    
@@ -166,7 +170,7 @@ def main():
     ])
 
     val_transform = DualCompose([
-        CenterCrop(512),
+        CenterCrop(160), #512
         ImageOnly(Normalize(mean_values, std_values))
     ])
 #albunet 34 with only 3 batch_size
@@ -192,9 +196,9 @@ def main():
     
     
     utilsTrain_HR.train_model(
-   
+        args=args,
         name_file=name_file,
-        model=model,
+        model=model,        
         optimizer=optimizer_ft,
         scheduler=exp_lr_scheduler,
         dataloaders=dataloaders,

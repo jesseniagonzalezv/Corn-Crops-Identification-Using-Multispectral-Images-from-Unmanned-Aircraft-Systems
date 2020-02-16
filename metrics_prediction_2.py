@@ -8,6 +8,7 @@ import torch.nn.functional as F
 from models import UNet11, UNet, AlbuNet34,SegNet
 import numpy as np
 import torch
+from torch import nn
 import glob
 import os
 import numpy as np
@@ -37,14 +38,14 @@ def make_loader(file_names, shuffle=False, transform=None,mode='train', limit=No
 
 def calc_loss(pred, target, metrics, bce_weight=0.5):
     bce = F.binary_cross_entropy_with_logits(pred, target)
-    
-    #pred=(pred >0).float()   #the same result with the next 2 lines
+
     pred = torch.sigmoid(pred)
     pred=(pred >0.50).float()  #with 0.55 is a little better
 
     dice = dice_loss(pred, target)
     
     jaccard_loss = metric_jaccard(pred, target)
+    
     
     loss = bce * bce_weight + dice * (1 - bce_weight)
     # convering tensor to numpy to remove from the computationl graph 
@@ -77,29 +78,7 @@ def find_metrics(train_file_names,val_file_names, test_file_names, max_values, m
     f2 = open(("predictions_{}/pred_loss_test{}_{}_foldout{}_foldin{}.txt").format(out_file,name_file,name_model, fold_out, fold_in), "w+")
     #f3 = open(("predictions_{}/pred_loss_val{}_{}.txt").format(out_file,name_file,name_model), "w+")
     f.write("Training mean_values:[{}], std_values:[{}] \n".format(mean_values, std_values))
-
-    #####Initialise the model ######################I am transfer the model#########################MAKE CODE MODELSSSS
-    '''  num_classes = 1 
-        
-    if name_model== 'UNet11':
-        model = UNet11(num_classes=num_classes)
-    elif name_model == 'UNet':
-        model = UNet(num_classes=num_classes)
-    elif name_model == 'AlbuNet34':
-        model = AlbuNet34(num_classes=num_classes, num_input_channels=4, pretrained=False)
-    elif name_model== 'SegNet':
-        model = SegNet(num_classes=num_classes, num_input_channels=4, pretrained=False)
-    else:
-        model = UNet11(num_classes=num_classes, input_channels=4)
-
-    PATH = ('logs_{}/mapping/model_40epoch{}_{}.pth').format(out_file,name_file,name_model) 
-    #PATH = ('logs_{}/mapping/model_40epoch{}_UNet.pth').format(out_file,name_file)
-        
-    model.cuda()
-    model.load_state_dict(torch.load(PATH))
-    model.eval()   # Set model to evaluate mode
-            '''
-
+            
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
     
     #####Dilenames ###############################################
@@ -110,7 +89,7 @@ def find_metrics(train_file_names,val_file_names, test_file_names, max_values, m
 
     if(dataset_file == 'HR'):
         val_transform = DualCompose([
-                CenterCrop(512),
+                CenterCrop(160), #512
                 ImageOnly(Normalize(mean_values, std_values))
             ])
 
@@ -249,7 +228,7 @@ def find_metrics(train_file_names,val_file_names, test_file_names, max_values, m
             loss = calc_loss(pred, labels, metrics)
             print_metrics(metrics,epoch_samples, f2)
 
-            pred=torch.sigmoid(pred) #####   
+            pred=torch.sigmoid(pred) ##### test then come back   
             pred_vec.append(pred.data.cpu().numpy())    
 
 
@@ -348,5 +327,34 @@ def find_metrics(train_file_names,val_file_names, test_file_names, max_values, m
 #find_metrics(train_file_names,val_file_names, test_file_names, max_values, mean_values, std_values,fold_out=0, fold_in=4,model=model,  name_model='UNet11', out_file=outfile_path,dataset_file='HR' ,name_file='_test_conida' )
 #from plotting import plot_prediction
 #plot_prediction(stage='test',name_file='_test_conida',out_file=outfile_path,name_model='UNet11',fold_out=0,fold_in=4, count=90)
+
+#########################end#### Test of the crops with the save model########################
+
+#train_file_names = np.load("logs_HR/mapping/train_files_100_percent_UNet_fold0_0.npy")
+#val_file_names = np.load("logs_HR/mapping/val_files_100_percent_UNet_fold0_0.npy")
+
+#data_path = Path('data_HR')
+#test_file_names =  np.array(sorted(glob.glob(str(data_path/'test'/'images') + "/*.npy")))
+
+
+#outfile_path = 'HR'
+#max_values= 65535
+#mean_values=(0.29901147, 0.35486281, 0.30294852, 0.48051917, 0.42927662)
+#std_values=(0.24230116, 0.22979451, 0.24606577, 0.22268051, 0.22120239)
+
+#3PATH = 'logs_HR/mapping/model_40epoch_100_percent_UNet_fold0.pth' ##100epochs
+
+#Initialise the model
+#num_classes = 3 
+#num_input_channels=5
+
+#model = UNet(num_classes=num_classes,input_channels=num_input_channels)
+#model.cuda()
+#model.load_state_dict(torch.load(PATH))
+#model.eval()   # Set model to evaluate mode        
+        
+#find_metrics(train_file_names,val_file_names, test_file_names, max_values, mean_values, std_values,fold_out=0, fold_in=0,model=model,  name_model='UNet', out_file=outfile_path,dataset_file='HR' ,name_file='_100_percent' )
+#from plotting import plot_prediction
+#plot_prediction(stage='test',name_file='_100_percent',out_file=outfile_path,name_model='UNet',fold_out=0,fold_in=0, count=3148)
 
 #########################end############################
