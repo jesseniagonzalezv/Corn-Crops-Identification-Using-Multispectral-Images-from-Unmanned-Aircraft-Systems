@@ -1,10 +1,19 @@
+'''
+This code is to create split the train and val data 20% of the data will be assigned val
+Input:
+    data_path: main path of the dataset 
+    name_file: path of the specific images 
+Output:list of names
+    train_file_names 
+    val_file_names
+'''
 
 import numpy as np
 import glob
 
 
 def get_files_names(data_path,name_file):
-    train_val_path = str(data_path / 'train_val{}'/ 'images').format(name_file)+ "/*.npy"
+    train_val_path = str((data_path / name_file/ 'images'))+ "/*.npy"
     fpath_list = sorted(glob.glob(train_val_path))
 
     

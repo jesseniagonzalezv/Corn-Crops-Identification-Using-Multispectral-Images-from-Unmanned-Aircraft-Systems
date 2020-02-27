@@ -1,14 +1,20 @@
-#####################
-'''This code is to load images and masks: data loader
+'''
+This code is to load images and masks: data loader
+
+Input:
+-Images and Masks  (H,W,CH)
+
+Output:
+- Images after transformations and convert to float tensor (CH,H,W)
 ''' 
-####################
+
 import torch
 import numpy as np
 from torch.utils.data import Dataset
 
 
 
-class WaterDataset(Dataset):
+class ImagesDataset(Dataset):
     def __init__(self, img_paths: list, transform=None, mode='train', limit=None):
         self.img_paths = img_paths
         self.transform = transform
@@ -37,8 +43,6 @@ class WaterDataset(Dataset):
             img, mask = self.transform(img, mask)
 
             return to_float_tensor(img), torch.from_numpy(np.expand_dims(mask, 0)).float()
-            ##To work con labels  return to_float_tensor(img),to_long_tensor(mask) # torch.from_numpy(np.expand_dims(mask, 0)).float()
-            
         else:
             mask = np.zeros(img.shape[:2])
             img, mask = self.transform(img, mask)
@@ -46,25 +50,27 @@ class WaterDataset(Dataset):
             return to_float_tensor(img), str(img_file_name) 
 
 
-def to_float_tensor(img): #CH,H,W
+def to_float_tensor(img):
     img=torch.from_numpy(np.moveaxis(img, -1, 0)).float()  
     return img
 
-def to_long_tensor(img): #CH,H,W
-    img=torch.from_numpy(np.moveaxis(img, -1, 0)).long()   #https://discuss.pytorch.org/t/multi-class-cross-entropy-loss-function-implementation-in-pytorch/19077/43
-    return img
 
-def load_image(path): # H,W,CH
+def load_image(path): #H,W,CH  
     img = np.load(str(path))
+    img=img
+    
+    ##TRAIN RGB 3 o RGBNIR 4
+    #img = img[:,:,:4]
+    #TRAIN R 0 o NIR 4
+    #imga = np.zeros((160,160,2))
+    #imga[:,:,0] = img[:,:,0]
+    #imga[:,:,1] = img[:,:,3]
+
     return  img 
 
-
-def load_mask(path):   #H,W,CH
-
-    mask = np.load(str(path).replace('images', 'masks'),0) #replace(r'.npy', r'_a.npy'), 0)
+def load_mask(path):   #H,W,CH   
+    mask = np.load(str(path).replace('images', 'masks'))#.replace(r'.npy', r'_a.npy'), 0)
+    #mask=mask.reshape(mask.shape[1],-1)
     mask =np .max(mask, axis=2)  #convert of 3 channel to 1 channel
-    #mask=mask.transpose(1, 2, 0) #.reshape(mask.shape[1],-1) # to convert de 1,H,W to  H,W
-    mask=(mask > 0).astype(np.uint8) 
-    
-    
+    mask=(mask > 0).astype(np.uint8)
     return mask

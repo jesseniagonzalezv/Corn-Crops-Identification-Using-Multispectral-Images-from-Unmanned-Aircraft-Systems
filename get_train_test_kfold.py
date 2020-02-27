@@ -1,3 +1,7 @@
+'''
+Splitthe data in kfold
+'''
+
 from pathlib import Path
 from sklearn.model_selection import KFold
 import numpy as np

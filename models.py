@@ -47,7 +47,7 @@ class DecoderBlock(nn.Module):
 
 
 class UNet11(nn.Module):
-    def __init__(self, num_classes=1, num_filters=32, pretrained=False,num_input_channels=4, is_deconv=False):
+    def __init__(self, num_classes=1, num_filters=32, pretrained=False,input_channels=4, is_deconv=False):
         """
         :param num_classes:
         :param num_filters:
@@ -63,7 +63,7 @@ class UNet11(nn.Module):
         self.encoder = models.vgg11(pretrained=pretrained).features
 
         self.relu = nn.ReLU(inplace=True)
-        self.conv1 = nn.Sequential(nn.Conv2d(num_input_channels, 64, 3, padding=1, bias=False),
+        self.conv1 = nn.Sequential(nn.Conv2d(input_channels, 64, 3, padding=1, bias=False),
                                    self.relu)
 
         self.conv2 = nn.Sequential(self.encoder[3],

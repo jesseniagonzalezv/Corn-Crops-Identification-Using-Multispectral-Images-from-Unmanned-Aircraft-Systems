@@ -1,10 +1,13 @@
 #####################
 '''
-Script: This is for making the validation mask data
+Script: This is for for copy in a new file the labels needed
 
-original_dataset_dir  ubication of the images that need labels
-label_dir ubication in which the labels are
-data_dir  ubication in which copy the masks
+Input:
+in_images_dir  ubication of the images that need labels
+in_label_dir ubication of the labels 
+
+Output:
+out_label_dir:  ubication where the copied labels will be placed
 
 '''
 #####################
@@ -12,49 +15,42 @@ data_dir  ubication in which copy the masks
 import shutil
 import glob
 import os
-# ----------------transferring masks corresponding to correct image-------------
-def transfer_masks(original_dataset_dir,label_dir,data_dir): 
-    #original_dataset_dir = "data_LR/train/images/"
-    #original_dataset_dir = "data_LR/val/images/"
-    #original_dataset_dir = "data_LR/test/images/"
 
+# ----------------transferring masks corresponding to correct input-------------
+def transfer_masks(in_images_dir="data_HR/train/images",in_label_dir="data_HR/data/masks", out_label_dir="data_HR/train/masks/"): 
 
-    print(original_dataset_dir)
-    #label_dir  = "data_LR/data/masks/"
+    print(in_images_dir)
 
-    #data_dir  = "data_LR/train/masks/"
-    #data_dir  = "data_LR/val/masks/"
-    #data_dir  = "data_LR/test/masks/"
 
     # copying files to their correspondig folder-------------------------
     ## Getting names of all files in the folder------------------------------------
-    get_files_path = original_dataset_dir + "/*.npy"
+    get_files_path = in_images_dir + "/*.npy"
     #print(len(get_files_path))
     fpath_list = sorted(glob.glob(get_files_path))
     
 
             
-    if not os.path.exists(data_dir):
-            os.mkdir(data_dir)
+    if not os.path.exists(out_label_dir):
+            os.mkdir(out_label_dir)
             
     
     for file in fpath_list:
         file = file.split("/")[-1]
-        fname = str(file[:-4] + ".npy") #+'_a+ npy'
+        fname = str(file[:-4]+".npy") # + "_a" + ".npy")
         #print(fname)
-        src = os.path.join(label_dir, fname)
-        dst = os.path.join(data_dir, fname)
+        src = os.path.join(in_label_dir, fname)
+        dst = os.path.join(out_label_dir, fname)
         shutil.copyfile(src, dst) 
 #____________________________________________________
 
-def obtained_mask(mode='all',original_dataset_dir_train="data_LR/train/images/",label_dir_train="data_LR/data/masks/",data_dir_train="data_LR/train/masks/" ,original_dataset_dir_val="data_LR/val/images/",label_dir_val="data_LR/data/masks/",data_dir_val="data_LR/val/masks/" ,original_dataset_dir_test="data_LR/test/images/",label_dir_test="data_LR/data/masks/",data_dir_test="data_LR/test/masks/"):
+def obtained_mask(mode='test',in_label_dir= "data_HR/data/masks/",in_images_dir_train="data_HR/train/images/", out_label_dir_train="data_HR/train/masks/" ,in_images_dir_val="data_HR/val/images/",out_label_dir_val="data_HR/val/masks/" ,in_images_dir_test="data_HR/test/images/",out_label_dir_test="data_HR/test/masks/"):
     
     
-    transfer_masks(original_dataset_dir_train,label_dir_train,data_dir_train)
+    transfer_masks(in_images_dir_train,in_label_dir,out_label_dir_train)
     if (mode=='val'):
-        transfer_masks(original_dataset_dir_val,label_dir_val,data_dir_val )
-    if (mode=='all'):
-        transfer_masks(original_dataset_dir_test,label_dir_test, data_dir_test )
+        transfer_masks(in_images_dir_val,in_label_dir,out_label_dir_val )
+    if (mode=='test'):
+        transfer_masks(in_images_dir_test,in_label_dir, out_label_dir_test )
 
 
 #   
