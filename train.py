@@ -20,7 +20,7 @@ from torch.optim import lr_scheduler   ####
 import utilsTrain 
 import torch.optim as optim 
 import numpy as np 
-import glob  ###
+import glob  
 import os
 
 from get_train_test_kfold import get_split_out, percent_split, get_split_in
@@ -53,11 +53,13 @@ def main():
     arg('--n-epochs', type=int, default=40)
     arg('--lr', type=float, default=1e-3)
     arg('--model', type=str, default='UNet11', choices=['UNet11','UNet','AlbuNet34','SegNet'])
-    arg('--dataset-path', type=str, default='data_corn_160', help='main file,in which the dataset is:  data_VHR or data_HR')
-    arg('--dataset-file', type=str, default='160', help='it depends of the resolution of the dataset 160x160 or 512x512' )
+    arg('--dataset-path', type=str, default='dataset', help='main file,in which the dataset is:  data_VHR or data_HR')
+    arg('--data-all', type=str, default='data_512', help='file with all the data')
+
+    arg('--dataset-file', type=str, default='512', help='it depends of the resolution of the dataset 160x160 or 512x512' )
     #arg('--out-file', type=str, default='VHR', help='the file in which save the outputs')
-    arg('--train-val-file', type=str, default='train_val_160', help='name of the train-val file VHR:train_val_160 or train_val_512' )
-    arg('--test-file', type=str, default='test_160', help='name of the test file test_512 or test_160' )
+    arg('--train-val-file', type=str, default='train_val_512', help='name of the train-val file VHR:train_val_160 or train_val_512' )
+    arg('--test-file', type=str, default='test_512', help='name of the test file test_512 or test_160' )
 
     num_classes = 1
     input_channels=5
@@ -94,7 +96,7 @@ def main():
     out_path = Path(('logs/mapping/{}').format(args.dataset_file))
     name_file = '_'+ str(int(args.percent*100))+'_percent_'+ args.dataset_file
     print(args.dataset_file,name_file)
-    data_all='data' ##file with all the data 
+    data_all=args.data_all ##file with all the data 
 
     data_path = Path(args.dataset_path) 
     print("data_path:",data_path)
@@ -119,7 +121,7 @@ def main():
     np.save(str(os.path.join(out_path,"val_files{}_{}_fold{}_{}.npy".format(name_file,args. model,args.fold_out, args.fold_in))), val_file_names)
     
 
-    print('num train = {}, num_val = {}'.format(len(train_file_names), len(val_file_names)))
+    print('num train = {}, num_val = {}, num_test={}'.format(len(train_file_names), len(val_file_names),len(test_file_names)))
 
     
     def make_loader(file_names, shuffle=False, transform=None,mode='train',batch_size=4, limit=None):
@@ -129,7 +131,7 @@ def main():
             batch_size=batch_size, 
             pin_memory=torch.cuda.is_available() 
         )
-    max_values, mean_values, std_values=meanstd(train_file_names, val_file_names,test_file_names,str(data_path),input_channels) #_60 
+    max_values, mean_values, std_values=meanstd(train_file_names, val_file_names,test_file_names,str(data_path/data_all),input_channels) #_60 
     print(max_values,mean_values, std_values)
        
     train_transform = DualCompose([
@@ -175,7 +177,7 @@ def main():
         name_model=args.model,
         num_epochs=args.n_epochs 
         )
-
+##### puedo reducir lo anterior y solo enviar args
 
     torch.save(model.module.state_dict(),(str(out_path)+'/model{}_{}_foldout{}_foldin{}_{}epochs').format(name_file,args.model,args.fold_out,args.fold_in,args.n_epochs)) 
     

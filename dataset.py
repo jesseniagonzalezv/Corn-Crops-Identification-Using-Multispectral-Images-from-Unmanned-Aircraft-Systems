@@ -57,7 +57,8 @@ def to_float_tensor(img):
 
 def load_image(path): #H,W,CH  
     img = np.load(str(path))
-    img=img
+    img=img.transpose((1, 2, 0))  
+    img=img[:,:,:5]
     
     ##TRAIN RGB 3 o RGBNIR 4
     #img = img[:,:,:4]
@@ -69,8 +70,11 @@ def load_image(path): #H,W,CH
     return  img 
 
 def load_mask(path):   #H,W,CH   
-    mask = np.load(str(path).replace('images', 'masks'))#.replace(r'.npy', r'_a.npy'), 0)
+    mask = np.load(str(path).replace('images', 'masks').replace(r'.npy', r'_a.npy'), 0)
     #mask=mask.reshape(mask.shape[1],-1)
-    mask =np .max(mask, axis=2)  #convert of 3 channel to 1 channel
+#    mask =np .max(mask, axis=2)  #convert of 3 channel to 1 channel
+#    mask=(mask > 0).astype(np.uint8)
+#    return mask
+    mask=mask.transpose(1, 2, 0).reshape(mask.shape[1],-1)
     mask=(mask > 0).astype(np.uint8)
     return mask
