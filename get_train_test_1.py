@@ -86,7 +86,7 @@ def split_train_test(original_dataset_dir= "data_HR/data/images" ,base_dir = "da
         shutil.copyfile(src, dst)    
 
 
-    labels_dir = os.path.join(base_dir,'data', 'masks') #only create the last-images
+    labels_dir = original_dataset_dir.replace('images','masks') #os.path.join(base_dir,masks_dir) #only create the last-images
 
     obtained_mask(mode="test",
                   in_label_dir=labels_dir,

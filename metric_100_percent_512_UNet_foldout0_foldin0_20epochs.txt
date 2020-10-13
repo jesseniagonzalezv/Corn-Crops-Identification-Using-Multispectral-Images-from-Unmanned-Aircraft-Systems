@@ -1,0 +1,10 @@
+Training mean_values:[[0.22651606 0.28676218 0.23280623 0.4252046  0.36872831]], std_values:[[0.11427596 0.1197355  0.12576549 0.16482459 0.141827  ]] 
+train_512
+dice_metric: 0.729361, std: 0.353677 
+jaccard_metric: 0.670466, std: 0.354137  
+val_512
+dice_metric: 0.688476, std: 0.375007 
+jaccard_metric: 0.629263, std: 0.370061  
+test_512
+dice_metric: 0.721883, std: 0.362789 
+jaccard_metric: 0.666323, std: 0.362777  

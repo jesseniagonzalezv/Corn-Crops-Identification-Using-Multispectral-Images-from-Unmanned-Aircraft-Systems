@@ -22,8 +22,9 @@ def plot_img_array(img_array, filedata,save,out_file, name_output, ncol=3):
 
     nrow = len(img_array)  // ncol    
     plt.close('all')
+    f, plots = plt.subplots(nrow, ncol, sharex='all', sharey='all', figsize=(ncol * 4, nrow * 4)) 
+    #f.suptitle('----Image---------Label---------Predictions---------')
 
-    f, plots = plt.subplots(nrow, ncol, sharex='all', sharey='all', figsize=(ncol * 4, nrow * 4))    
     count = 0
     for i in range(len(img_array)):
 
@@ -80,8 +81,8 @@ def masks_to_colorimg(masks):
 def reverse_transform(inp,out_file='512'):
     inp = inp.transpose(1,2,0)
     if out_file=='512':                   
-        mean = np.array([0.11239524, 0.101936, 0.11311523])
-        std = np.array([0.08964322, 0.06702993, 0.05725554]) 
+        mean = np.array([0.22651606, 0.28676218, 0.23280623 ])
+        std = np.array([0.11427596, 0.1197355,  0.12576549] )  
         inp = std * inp + mean
         inp = np.clip(inp, 0, 1)*65535 #
         inp = (inp/inp.max()*255).astype(np.uint8)

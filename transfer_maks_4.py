@@ -36,7 +36,7 @@ def transfer_masks(in_images_dir="data_HR/train/images",in_label_dir="data_HR/da
     
     for file in fpath_list:
         file = file.split("/")[-1]
-        fname = str(file[:-4]+".npy") # + "_a" + ".npy")
+        fname = str(file[:-4]+ "_a" + ".npy")
         #print(fname)
         src = os.path.join(in_label_dir, fname)
         dst = os.path.join(out_label_dir, fname)

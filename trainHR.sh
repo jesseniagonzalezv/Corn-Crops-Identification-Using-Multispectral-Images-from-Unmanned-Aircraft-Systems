@@ -5,7 +5,7 @@ export CUDA_VISIBLE_DEVICES=0,1,2,3
 echo hola
 
 #40epech
-python train.py   --model UNet  --n-epochs 40 --lr 1e-4
+#python train.py   --model UNet  --n-epochs 40 --lr 1e-4
 python plotting.py --out-file '160' --stage 'test' --name-file '_100_percent_160' --name-model 'UNet' --n-epochs 40 --count 2747 
 
 #100epochs batch 8
