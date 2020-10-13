@@ -15,7 +15,7 @@ import torch.backends.cudnn as cudnn
 import torch.backends.cudnn
 import json
 from models import UNet11,UNet, AlbuNet34, SegNet
-from deeplav3 import DeepLabV3
+#from deeplabv3 import DeepLabV3
 
 from dataset import ImagesDataset
 from torch.optim import lr_scheduler   ####
@@ -45,8 +45,8 @@ from transformsdata import (DualCompose,
 def main():
     parser = argparse.ArgumentParser()
     arg = parser.add_argument
-    arg('--device-ids', type=str, default='0', help='For example 0,1 to run on two GPUs')
-    arg('--device-ids', type=str, default='[1,5,1,2,3]', help='1:B, 2:G, 3:R, 4:NIR')
+    arg('--device-ids', type=str, default='1', help='For example 0,1 to run on two GPUs')
+    arg('--channels', type=str, default='0,1,2,3,4', help='0:B, 1:G, 2:R, 3:NIR, 4:Red Edge')
     arg('--fold-out', type=int, default='0', help='fold train-val test')
     arg('--fold-in', type=int, default='0', help='fold train val')
     arg('--percent', type=float, default=1, help='percent of data')
@@ -64,14 +64,18 @@ def main():
     arg('--train-val-file', type=str, default='train_val_512', help='name of the train-val file VHR:train_val_160 or train_val_512' )
     arg('--test-file', type=str, default='test_512', help='name of the test file test_512 or test_160' )
 
-    num_classes = 1
-    input_channels=5
+
 
     args = parser.parse_args()    
     root = Path(args.root)
     root.mkdir(exist_ok=True, parents=True)
 
-
+    num_classes = 1
+    channels=list(map(int, args.channels.split(','))) #5
+    input_channels=len(channels)
+    print('channels:',channels,'len',input_channels)
+    
+    
     if args.model == 'UNet11':
         model = UNet11(num_classes=num_classes, input_channels=input_channels)
     elif args.model == 'UNet':
@@ -91,8 +95,11 @@ def main():
             device_ids = list(map(int, args.device_ids.split(',')))
         else:
             device_ids = None
-        model = nn.DataParallel(model, device_ids=device_ids).cuda()
+        #model = nn.DataParallel(model, device_ids=device_ids).cuda()
+        model = nn.DataParallel(model, device_ids = device_ids)
+        model.to(f'cuda:{model.device_ids[0]}')
 
+    print('device model',device_ids)
     cudnn.benchmark = True
 
 
@@ -129,9 +136,9 @@ def main():
     print('num train = {}, num_val = {}, num_test={}'.format(len(train_file_names), len(val_file_names),len(test_file_names)))
 
     
-    def make_loader(file_names, shuffle=False, transform=None,mode='train',batch_size=4, limit=None):
+    def make_loader(file_names, channels,shuffle=False, transform=None,mode='train',batch_size=4, limit=None):
         return DataLoader(
-            dataset=ImagesDataset(file_names, transform=transform,mode=mode, limit=limit),
+            dataset=ImagesDataset(file_names,channels, transform=transform,mode=mode, limit=limit),
             shuffle=shuffle,            
             batch_size=batch_size, 
             pin_memory=torch.cuda.is_available() 
@@ -152,8 +159,8 @@ def main():
                 ImageOnly(Normalize(mean=mean_values, std=std_values))
     ])
 
-    train_loader = make_loader(train_file_names, shuffle=True, transform=train_transform, mode='train', batch_size = args.batch_size)  
-    valid_loader = make_loader(val_file_names, transform=val_transform, batch_size = args.batch_size, mode = "train")
+    train_loader = make_loader(train_file_names,channels, shuffle=True, transform=train_transform, mode='train', batch_size = args.batch_size)  
+    valid_loader = make_loader(val_file_names,channels, transform=val_transform, batch_size = args.batch_size, mode = "train")
   
     dataloaders = {
     'train': train_loader, 'val': valid_loader
@@ -191,7 +198,8 @@ def main():
 
     find_metrics(train_file_names=train_file_names, 
                  val_file_names=val_file_names, 
-                 test_file_names=test_file_names, 
+                 test_file_names=test_file_names,
+                 channels=channels,
                  max_values=max_values, 
                  mean_values=mean_values, 
                  std_values=std_values,

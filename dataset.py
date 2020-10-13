@@ -15,8 +15,9 @@ from torch.utils.data import Dataset
 
 
 class ImagesDataset(Dataset):
-    def __init__(self, img_paths: list, transform=None, mode='train', limit=None):
+    def __init__(self, img_paths: list, channels:list, transform=None, mode='train', limit=None):
         self.img_paths = img_paths
+        self.channels =channels
         self.transform = transform
         self.mode = mode
         self.limit = limit
@@ -34,7 +35,7 @@ class ImagesDataset(Dataset):
             img_file_name = np.random.choice(self.img_paths)
             
 
-        img = load_image(img_file_name)
+        img = load_image(img_file_name,self.channels )
         #print(self.mode)
 
         if self.mode == 'train':
@@ -55,11 +56,21 @@ def to_float_tensor(img):
     return img
 
 
-def load_image(path): #H,W,CH  
+def load_image(path,channels): #in CH, H,W  out: H,W,CH
     img = np.load(str(path))
     img=img.transpose((1, 2, 0))  
-    img=img[:,:,:5]
+    dimsH=img.shape[0]
+    dimsW=img.shape[1]
+    dimsCH=len(channels)
+
+
+    imga = np.zeros((dimsH,dimsW,dimsCH))
+
     
+    for i,ch in enumerate(channels):
+        imga[:,:,i] =img[:,:,ch]
+        
+        
     ##TRAIN RGB 3 o RGBNIR 4
     #img = img[:,:,:4]
     #TRAIN R 0 o NIR 4
@@ -67,7 +78,7 @@ def load_image(path): #H,W,CH
     #imga[:,:,0] = img[:,:,0]
     #imga[:,:,1] = img[:,:,3]
 
-    return  img 
+    return  imga 
 
 def load_mask(path):   #H,W,CH   
     mask = np.load(str(path).replace('images', 'masks').replace(r'.npy', r'_a.npy'), 0)

@@ -64,15 +64,15 @@ def print_metrics(metrics, file, phase='train', epoch_samples=1 ):
 
  
     
-def make_loader(file_names, shuffle=False, transform=None,mode='train',batch_size=1, limit=None):
+def make_loader(file_names,channels, shuffle=False, transform=None,mode='train',batch_size=1, limit=None):
         return DataLoader(
-            dataset=ImagesDataset(file_names, transform=transform,mode=mode, limit=limit),
+            dataset=ImagesDataset(file_names,channels, transform=transform,mode=mode, limit=limit),
             shuffle=shuffle,            
             batch_size=batch_size,
             pin_memory=torch.cuda.is_available() 
         )
 
-def find_metrics(train_file_names,val_file_names, test_file_names, max_values, mean_values, std_values,model,fold_out='0', fold_in='0',  name_model='UNet11', epochs='40',out_file='VHR',dataset_file='VHR' ,name_file='_VHR_60_fake' ):
+def find_metrics(train_file_names,val_file_names, test_file_names, channels,max_values, mean_values, std_values,model,fold_out='0', fold_in='0',  name_model='UNet11', epochs='40',out_file='VHR',dataset_file='VHR' ,name_file='_VHR_60_fake' ):
                             
     outfile_path = ('predictions/{}/').format(out_file)
         
@@ -80,7 +80,7 @@ def find_metrics(train_file_names,val_file_names, test_file_names, max_values, m
     f2 = open(("predictions/{}/pred_loss_test{}_{}_foldout{}_foldin{}_{}epochs.txt").format(out_file,name_file,name_model, fold_out, fold_in,epochs), "w+")
     f.write("Training mean_values:[{}], std_values:[{}] \n".format(mean_values, std_values))
 
-    device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+    device = torch.device("cuda:1" if torch.cuda.is_available() else "cpu")
     
     #####Dilenames ###############################################
 
@@ -94,9 +94,9 @@ def find_metrics(train_file_names,val_file_names, test_file_names, max_values, m
             ])
 
 
-    train_loader = make_loader(train_file_names,shuffle=True, transform=all_transform)
-    val_loader = make_loader(val_file_names, transform=all_transform)
-    test_loader = make_loader(test_file_names, transform=all_transform)
+    train_loader = make_loader(train_file_names,channels,shuffle=True, transform=all_transform)
+    val_loader = make_loader(val_file_names,channels, transform=all_transform)
+    test_loader = make_loader(test_file_names,channels, transform=all_transform)
 
     dataloaders = {
     'train': train_loader, 'val': val_loader, 'test':test_loader    }
