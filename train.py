@@ -46,7 +46,7 @@ def main():
     parser = argparse.ArgumentParser()
     arg = parser.add_argument
     arg('--device-ids', type=str, default='0', help='For example 0,1 to run on two GPUs')
-    arg('--device-ids', type=str, default='[0,1,2,3]', help='1:B, 2:G, 3:R, 4:NIR')
+    arg('--device-ids', type=str, default='[2,1,2,3]', help='1:B, 2:G, 3:R, 4:NIR')
     arg('--fold-out', type=int, default='0', help='fold train-val test')
     arg('--fold-in', type=int, default='0', help='fold train val')
     arg('--percent', type=float, default=1, help='percent of data')
