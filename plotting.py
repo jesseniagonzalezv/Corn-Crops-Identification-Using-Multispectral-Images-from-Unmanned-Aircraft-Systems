@@ -38,7 +38,9 @@ def read_metric(out_file,stage,name_file, name,name_model,fold_out,fold_in,epoch
 
 def plot_history_train(out_file,name_file,name_model,fold_out,fold_in,epochs):
     file = open(("history/{}/history_model{}_{}_foldout{}_foldin{}_{}epochs.txt").format(out_file,name_file,name_model,fold_out,fold_in,epochs), "r")
+    
 
+        
     filedata = file.read() 
     filedata = filedata.replace("dataloader",",dataloader")
     filedata = filedata.replace("saving",",saving")

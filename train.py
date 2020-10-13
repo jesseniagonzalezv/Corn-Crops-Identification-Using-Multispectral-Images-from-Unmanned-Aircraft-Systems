@@ -15,6 +15,8 @@ import torch.backends.cudnn as cudnn
 import torch.backends.cudnn
 import json
 from models import UNet11,UNet, AlbuNet34, SegNet
+from deeplav3 import DeepLabV3
+
 from dataset import ImagesDataset
 from torch.optim import lr_scheduler   ####
 import utilsTrain 
@@ -44,6 +46,7 @@ def main():
     parser = argparse.ArgumentParser()
     arg = parser.add_argument
     arg('--device-ids', type=str, default='0', help='For example 0,1 to run on two GPUs')
+    arg('--device-ids', type=str, default='0', help='1:B, 2:G, 3:R, 4:NIR')
     arg('--fold-out', type=int, default='0', help='fold train-val test')
     arg('--fold-in', type=int, default='0', help='fold train val')
     arg('--percent', type=float, default=1, help='percent of data')
@@ -77,6 +80,8 @@ def main():
         model = AlbuNet34(num_classes=num_classes, num_input_channels=input_channels, pretrained=False)
     elif args.model == 'SegNet':
         model = SegNet(num_classes=num_classes, num_input_channels=input_channels, pretrained=False)
+    elif args.model == 'DeepLabV3':
+        model = DeepLabV3(num_classes=num_classes, in_channels=input_channels)
     else:
         model = UNet11(num_classes=num_classes, input_channels=input_channels)
 
@@ -94,7 +99,7 @@ def main():
 
     ####################Change the files_names ######################################
     out_path = Path(('logs/mapping/{}').format(args.dataset_file))
-    name_file = '_'+ str(int(args.percent*100))+'_percent_'+ args.dataset_file
+    name_file = '_'+ str(int(args.percent*100))+'_percent_' + args.dataset_file
     print(args.dataset_file,name_file)
     data_all=args.data_all ##file with all the data 
 
