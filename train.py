@@ -114,11 +114,11 @@ def main():
     print("data_path:",data_path)
     #################################################################################  
     # Nested cross validation K-fold train test
-    #train_val_file_names, test_file_names = get_split_out(data_path,data_all,args.fold_out)
+    train_val_file_names, test_file_names = get_split_out(data_path,data_all,args.fold_out)
     #################################################################################  
     #eWe are consider the same test in all the cases
-    train_val_file_names=np.array(sorted(glob.glob(str(data_path/args.train_val_file/'images')+ "/*.npy")))
-    test_file_names =  np.array(sorted(glob.glob(str(data_path/args.test_file/'images') + "/*.npy")))
+    #train_val_file_names=np.array(sorted(glob.glob(str(data_path/args.train_val_file/'images')+ "/*.npy")))
+    #test_file_names =  np.array(sorted(glob.glob(str(data_path/args.test_file/'images') + "/*.npy")))
     
     if args.percent !=1:
         extra, train_val_file_names= percent_split(train_val_file_names, args.percent) 
@@ -174,7 +174,7 @@ def main():
         json.dumps(vars(args), indent=True, sort_keys=True))
     
     optimizer_ft = optim.Adam(model.parameters(), lr= args.lr)  #
-    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=20, gamma=0.1) 
+    exp_lr_scheduler = lr_scheduler.StepLR(optimizer_ft, step_size=40, gamma=0.1) 
     
     
     utilsTrain.train_model(
