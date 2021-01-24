@@ -7,7 +7,7 @@ from sklearn.model_selection import KFold
 import numpy as np
 
 
-def get_split_out(data_path,name_file, fold, num_splits=5):
+def get_split_out(data_path,name_file, fold, num_splits=10):
     #data_path=Path(path)
 
     train_path = data_path / name_file / 'images'
