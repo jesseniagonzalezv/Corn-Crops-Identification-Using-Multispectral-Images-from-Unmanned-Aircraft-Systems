@@ -25,7 +25,7 @@ Dataset --- HR
 
 ### Run each Model:
         Run_HR: 
-        1. python train.sh
-        2. python plotting.sh  (need path roots)
+        1. python run.sh
+
 
 Modificacion en terminal

@@ -90,10 +90,10 @@ def plot_prediction(stage='test',name_file='_VHR_60_fake',out_file='VHR',name_mo
     pred_images = np.load(pred_file)
     val_label = np.load(label_file)
     print(val_images.shape,val_label.shape,pred_images.shape)
-    input_images_rgb = [helper.reverse_transform(x,out_file) for x in val_images[:95,0,:3,:,:]]   #new metrics
+    input_images_rgb = [helper.reverse_transform(x,out_file) for x in val_images[:count,0,:3,:,:]]   #new metrics
     # Map each channel (i.e. class) to each color
-    target_masks_rgb = [helper.masks_to_colorimg(x) for x in val_label[:95,0,:3,:,:]]
-    pred_rgb = [helper.masks_to_colorimg(x) for x in pred_images[:95,0,:,:,:]]
+    target_masks_rgb = [helper.masks_to_colorimg(x) for x in val_label[:count,0,:3,:,:]]
+    pred_rgb = [helper.masks_to_colorimg(x) for x in pred_images[:count,0,:,:,:]]
 
     name_output=("{}{}_{}_foldout{}_foldin{}_{}epochs").format(stage, name_file,name_model,fold_out,fold_in,epochs)
   
