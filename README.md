@@ -1,5 +1,4 @@
-# Segmentation-Of-Crop-and-Water
-
+# Segmentation-Of-Crop
 
 
 How to run
@@ -7,25 +6,25 @@ How to run
 The dataset is organized in the folloing way::
 ::
 
-        ├── data_corn
-        │   ├── test
-        │           ├── images
-        │           └── masks
-        │   └── val
-        │           ├── images
-        │           └── masks
-        │   └── train
+        ├── dataset
+        │      ├── data_512
         │           ├── images
         │           └── masks
         ├── predictions
+        │      ├── 512
         ├── history
+        │      ├── 512
+        ├── logs
+        │      ├── mapping
+        │            ├── 512
         │ ......................
 
-Dataset --- HR
+Dataset --- 
 
-### Run each Model:
-        Run_HR: 
+### Run Model:
+     
         1. python run.sh
+        
 
 
-Modificacion en terminal
+
